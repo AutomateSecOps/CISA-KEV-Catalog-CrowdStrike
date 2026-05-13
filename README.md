@@ -1,28 +1,42 @@
-# CISA KEV Catalog CrowdStrike Host Report
+## Patching What Matters: A Tines Story for CISA KEV Hosts in CrowdStrike
 
-While we wait for the AI apocalypse, maybe we should patch those Common Vulnerabilities & Exposure (CVE) IDs that are in the [CISA Known Exploited Vulnerabilities (KEV) catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog).
+*Posted on AutomateSecOps by Tom Power*
 
-The catalog contains a list of CVE IDs that are actively exploited in the wild.
+---
 
-It is human nature to get distracted by the next possible risk since we are hardwired to be on the lookout for the next big bomb that will blow up our world.  
+## The Problem with Prioritization
 
-Marketing departments in companies know this fact.
+Security teams drown in vulnerability data. 
 
-These Tines workflows provide reports for hosts in CrowdStrike that have a vulnerability on the CISA KEV catalog.
+Tens of thousands of CVE IDs are published every year, and your CrowdStrike Spotlight dashboard is probably no different — a long tail of findings ranked by CVSS score, severity label, or whatever your scanner vendor decided mattered most this quarter.
 
-This host report is a great start to understand a company's security posture.
+But CVSS scores don't tell you what's being weaponized right now. 
+The CISA Known Exploited Vulnerabilities (KEV) catalog does.
 
-Start patching hosts, with a KEV CVE ID and that is exposed on the Internet, will decrease a company's risk profile.
+The KEV is a curated list maintained by the Cybersecurity and Infrastructure Security Agency of CVE IDs that have confirmed, active exploitation in the wild. 
 
-I hope you found this useful.  
+It's not theoretical risk. 
 
-You can import this Tines story into your tenant by downloading the json file in the [tines](https://github.com/AutomateSecOps/EDgaR-Utility/tree/main/TinesStory) folder.
+It's real-world attack surface. 
 
-Once you start automating, you cannot stop!
+And if a host in your environment has an open vulnerability that's on that list, that's where your patching energy should go first.
 
-Happy Building.
+The problem? Cross-referencing the CISA KEV against your CrowdStrike Spotlight data every week is a manual chore. This Tines story eliminates that chore.
+
+---
+
+## What This Story Does
+
+The **CISA-KEV-CrowdStrike-Hosts** story runs on a schedule and produces a weekly CSV report of every CrowdStrike-managed host in your environment that has an open vulnerability matching a CVE ID on the CISA KEV catalog. It enriches each finding with ransomware campaign association data, internet exposure status, asset criticality, CISA remediation due dates, and more — then writes each result to a Tines Record and emails the full report as a CSV attachment.
+
+The output gives your team a clear, actionable list: these specific hosts, these specific CVEs, patch by this date.
+
+I hope you find this useful.
+
+Happy Building!
 
 Tom
+
 
 ## Tines Documenation
 - [Tines AI Automatic Mode Event Transformation](https://www.tines.com/docs/actions/types/event-transformation/automatic//)
