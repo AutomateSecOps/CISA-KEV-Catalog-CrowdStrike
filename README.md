@@ -21,7 +21,9 @@ It's real-world attack surface.
 
 And if a host in your environment has an open vulnerability that's on that list, that's where your patching energy should go first.
 
-The problem? Cross-referencing the CISA KEV against your CrowdStrike Spotlight data every week is a manual chore. This Tines story eliminates that chore.
+The challenge? Cross-referencing the CISA KEV against your CrowdStrike Spotlight data every week is a manual chore. 
+
+This Tines story eliminates that chore.
 
 ---
 
