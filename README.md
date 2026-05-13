@@ -4,13 +4,15 @@ While we wait for the AI apocalypse, maybe we should patch those Common Vulnerab
 
 The catalog contains a list of CVE IDs that are actively exploited in the wild.
 
-It is human nature to get distracted by the next possible risk since we are hardwired to be on the lookout for the next big risk that will blow up our world.  
+It is human nature to get distracted by the next possible risk since we are hardwired to be on the lookout for the next big bomb that will blow up our world.  
 
-Marketing departments in security companies know this fact.
+Marketing departments in companies know this fact.
 
 These Tines workflows provide reports for hosts in CrowdStrike that have a vulnerability on the CISA KEV catalog.
 
-This host report is a great start to understand a company's security posture for known exploited vulnerbilities that could cause a security breach.
+This host report is a great start to understand a company's security posture.
+
+Start patching hosts, with a KEV CVE ID and that is exposed on the Internet, will decrease a company's risk profile.
 
 I hope you found this useful.  
 

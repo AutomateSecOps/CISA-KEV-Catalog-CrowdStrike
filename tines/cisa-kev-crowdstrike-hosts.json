@@ -1,0 +1,2703 @@
+{
+  "schema_version": 28,
+  "standard_lib_version": 90,
+  "action_runtime_version": 76,
+  "name": "CISA-KEV-CrowdStrike-Hosts",
+  "description": null,
+  "guid": "af3d3d35b221a49a47107c493fe9a4dc",
+  "slug": "cisa_kev_crowdstrike_hosts",
+  "agents": [
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Weekly report of CS Hosts on KEV Catalog",
+      "disabled": false,
+      "description": "Retrieve a list of record results.\n\nLink to documentation: https://www.tines.com/api/records/list",
+      "guid": "c791e7749de3e227ed1113f17997a932",
+      "origin_story_identifier": "cloud:d521f765a49c72507257a2620612ee96:3c9cc71dae4dee749c3a58cd2fb36a27",
+      "options": {
+        "url": "https://<<INPUT.tenant_domain>>/api/v1/records",
+        "method": "get",
+        "headers": {
+          "Authorization": "Bearer <<INPUT.tines_credential>>"
+        },
+        "content_type": "application_json",
+        "payload": "=LOCAL.final_payload",
+        "local": {
+          "optional_parameters": {
+            "range_start": "=DATE(INPUT.range_start, \"%FT%TZ\")",
+            "range_end": "=DATE(INPUT.range_end, \"%FT%TZ\")",
+            "record_type_id": "=INPUT.record_type_id",
+            "record_field_ids": "=SPLIT(REMOVE(INPUT.record_field_ids, \" \"), \",\")",
+            "story_ids": "=SPLIT(REMOVE(INPUT.story_ids, \" \"), \",\")",
+            "order_direction": "=IF(INPUT.sort_direction_order[0] = \"Ascending\", \"ASC\", \"DESC\")",
+            "order_field_id": "=INPUT.order_field_id",
+            "per_page": "=INPUT.per_page",
+            "page": "=INPUT.page",
+            "filters": "=INPUT.filters",
+            "test_mode": "=INPUT.test_mode"
+          },
+          "final_payload": "=REJECT(\n  LOCAL.optional_parameters,\n  LAMBDA(\n    item,\n    OR(\n      item = NULL,\n      IF(\n        OR(\n          TYPE(item) = \"TrueClass\",\n          TYPE(item) = \"FalseClass\",\n          TYPE(item) = \"Integer\"\n        ),\n        IS_EMPTY(TEXT(item)),\n        IS_EMPTY(item)\n      )\n    )\n  )\n)"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "3a00b8407197b1d8cd6f5215601130bf528667fdaec0b882594346a579d51446",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": [
+        {
+          "cron": "0 12 * * *",
+          "timezone": "America/Vancouver"
+        }
+      ]
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "More pages",
+      "disabled": false,
+      "description": null,
+      "guid": "601a46ee3cb5613cf9735658f8ec265f",
+      "origin_story_identifier": "cloud:d521f765a49c72507257a2620612ee96:3c9cc71dae4dee749c3a58cd2fb36a27",
+      "options": {
+        "rules": [
+          {
+            "path": "=IS_PRESENT(weekly_report_of_cs_hosts_on_kev_catalog.body.meta.next_page)",
+            "type": "formula"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Weekly report of CS Hosts on KEV Catalog",
+      "disabled": false,
+      "description": "Retrieve a list of record results.\n\nLink to documentation: https://www.tines.com/api/records/list",
+      "guid": "8f1331456d700d3db33796e4b5ac3197",
+      "origin_story_identifier": "cloud:d521f765a49c72507257a2620612ee96:3c9cc71dae4dee749c3a58cd2fb36a27",
+      "options": {
+        "url": "https://<<INPUT.tenant_domain>>/api/v1/records",
+        "method": "get",
+        "headers": {
+          "Authorization": "Bearer <<INPUT.tines_credential>>"
+        },
+        "content_type": "application_json",
+        "log_error_on_status": [
+          "400-499",
+          "500"
+        ],
+        "retry_on_status": [
+          "0",
+          "400-499",
+          "500"
+        ],
+        "payload": "=LOCAL.final_payload",
+        "local": {
+          "optional_parameters": {
+            "range_start": "=DATE(INPUT.range_start, \"%FT%TZ\")",
+            "range_end": "=DATE(INPUT.range_end, \"%FT%TZ\")",
+            "record_type_id": "=INPUT.record_type_id",
+            "record_field_ids": "=SPLIT(REMOVE(INPUT.record_field_ids, \" \"), \",\")",
+            "story_ids": "=SPLIT(REMOVE(INPUT.story_ids, \" \"), \",\")",
+            "order_direction": "=IF(INPUT.sort_direction_order[0] = \"Ascending\", \"ASC\", \"DESC\")",
+            "order_field_id": "=INPUT.order_field_id",
+            "per_page": "=INPUT.per_page",
+            "page": "=INPUT.page",
+            "test_mode": "=INPUT.test_mode"
+          },
+          "final_payload": "=REJECT(\n  LOCAL.optional_parameters,\n  LAMBDA(\n    item,\n    OR(\n      item = NULL,\n      IF(\n        OR(\n          TYPE(item) = \"TrueClass\",\n          TYPE(item) = \"FalseClass\",\n          TYPE(item) = \"Integer\"\n        ),\n        IS_EMPTY(TEXT(item)),\n        IS_EMPTY(item)\n      )\n    )\n  )\n)"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "6435a109b2208ea7c31a61f1fa7e73c7f01e1304a09120b380bd0ef0420fbcdf",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "hosts",
+      "disabled": false,
+      "description": null,
+      "guid": "2aa462ca6643e7cb9733e3992be12933",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "array": "=weekly_report_of_cs_hosts_on_kev_catalog.body.record_results"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "hosts",
+      "disabled": false,
+      "description": null,
+      "guid": "c143544a087a8eee1d1630476f507668",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "array": "=CONCAT(weekly_report_of_cs_hosts_on_kev_catalog.body.record_results, hosts.array)"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Send Email",
+      "disabled": false,
+      "description": null,
+      "guid": "d7e60e7ed7e0d68e6a79b23dfa5a66a6",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "recipients": [],
+        "reply_to": "",
+        "sender_name": "Tines CrowdStrike CISA KEV Host Report",
+        "subject": "CrowdStrike: Weekly CISA KEV Host Report",
+        "body": "Please see the attached CISA Known Exploited Vulnerabilities CrowdStrike Host report.",
+        "advanced_html": true,
+        "attachments": [
+          {
+            "filename": "<<TODAY()>>_CS_KEV_Host_report.csv",
+            "base64encodedcontents": "<<BASE64_ENCODE(OBJECTS_TO_CSV(hosts.array))>>",
+            "content_type": "auto"
+          }
+        ],
+        "sender_address": "",
+        "cc": [],
+        "bcc": []
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "List Catalog of Known Exploited Vulnerabilities in CISA",
+      "disabled": false,
+      "description": "",
+      "guid": "fe4249155cfbea086eda618744110f1a",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:565a5910886172692426da5285cf26a8",
+      "options": {
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "content_type": "application_json",
+        "method": "get"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "9d56ead01faefe2866b1f85560eab470e34fb6524f38d2243198e6d79ec3653f",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "CS Hosts with CVE ID on the CISA KEV",
+      "disabled": false,
+      "description": "Created from cURL command",
+      "guid": "f23d7b3f79b8d63958e093ee949cf05d",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "url": "https://api.crowdstrike.com/spotlight/combined/vulnerabilities/v1",
+        "method": "get",
+        "payload": {
+          "facet": [
+            "host_info",
+            "cve",
+            "remediation"
+          ],
+          "filter": "cve.is_cisa_kev:true+status:'open'",
+          "limit": 500,
+          "sort": "updated_timestamp.desc"
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer <<CREDENTIAL.crowdstrike_prod_vuln_ro>>"
+        },
+        "params_encoder": "flat"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "More results?",
+      "disabled": false,
+      "description": null,
+      "guid": "104b1a29d24a185461ac5c55f190c055",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "rules": [
+          {
+            "path": "<<cs_hosts_with_cve_id_on_the_cisa_kev.body.meta.pagination.after>>",
+            "type": "field!=null"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "CS Hosts with CVE ID on the CISA KEV",
+      "disabled": false,
+      "description": "Created from cURL command",
+      "guid": "f27e2e788aaa7e64f38d49cdc1b68eb7",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "url": "https://api.crowdstrike.com/spotlight/combined/vulnerabilities/v1",
+        "method": "get",
+        "payload": {
+          "facet": [
+            "host_info",
+            "cve",
+            "remediation"
+          ],
+          "filter": "cve.is_cisa_kev:true+status:'open'",
+          "limit": 500,
+          "sort": "updated_timestamp.desc",
+          "after": "<<cs_hosts_with_cve_id_on_the_cisa_kev.body.meta.pagination.after>>"
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer <<CREDENTIAL.crowdstrike_prod_vuln_ro>>"
+        },
+        "params_encoder": "flat"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Explode",
+      "disabled": false,
+      "description": null,
+      "guid": "9b8c052cd70c20e9fbecc8c2285fd529",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "explode",
+        "path": "=cs_hosts_with_cve_id_on_the_cisa_kev.body.resources",
+        "to": "host_kev",
+        "limit": "5000"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "delay",
+      "disabled": false,
+      "description": null,
+      "guid": "5d1bd2e8e1227fb4148300dae7b71d9b",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "delay",
+        "seconds": "5"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Check for Ransomware",
+      "disabled": false,
+      "description": null,
+      "guid": "82ac1a5c1b2ccd4a3cff80fb0da0911b",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "ransom": "=WHERE(RESOURCE.cs_kev_report, \"cveID\", explode.host_kev.cve.id)"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Append object",
+      "disabled": false,
+      "description": "Append a string or an array to a resource. If the resource has a test value this can be modified by using the is_test parameter.\n\nLink to API documentation: https://www.tines.com/api/resources/append-element",
+      "guid": "d652c9cd75b115dc6f048935a8b90c5f",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "url": "https://<<INPUT.tenant_domain>>/api/v1/global_resources/<<INPUT.resource_id>>/append",
+        "method": "post",
+        "headers": {
+          "Authorization": "Bearer <<INPUT.tines_credential>>"
+        },
+        "content_type": "application_json",
+        "local": {
+          "all_parameters": {
+            "value": "=DEFAULT(INPUT.text_value, INPUT.array_value)",
+            "is_test": "=INPUT.is_test_resource"
+          },
+          "final_payload": "=REJECT(\n  LOCAL.all_parameters,\n  LAMBDA(\n    item,\n    OR(\n      item = NULL,\n      IF(\n        OR(\n          TYPE(item) = \"TrueClass\",\n          TYPE(item) = \"FalseClass\",\n          TYPE(item) = \"Integer\"\n        ),\n        IS_EMPTY(TEXT(item)),\n        IS_EMPTY(item)\n      )\n    )\n  )\n)"
+        },
+        "payload": "=LOCAL.final_payload",
+        "retry_on_status": [
+          "0",
+          "400-499",
+          "500"
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "b40e331f2e157852280d1116aff9f928555943a8fb098475fb5e987014e3e238",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Clear a JSON resource",
+      "disabled": false,
+      "description": "Clear a resource value in Tines.\n\nLink to API documentation: https://www.tines.com/api/resources/update",
+      "guid": "0bd78ecfb01c161734a903a0b9ea9651",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "url": "https://<<INPUT.tenant_domain>>/api/v1/global_resources/<<INPUT.resource_id>>",
+        "method": "put",
+        "headers": {
+          "Authorization": "Bearer <<INPUT.tines_credential>>"
+        },
+        "content_type": "application_json",
+        "local": {
+          "all_parameters": {
+            "name": "=INPUT.resource_name",
+            "folder_id": "=INPUT.folder_id",
+            "read_access": "=DEFAULT(FORCE_ARRAY(INPUT.read_access)[0], \"TEAM\")",
+            "shared_team_slugs": "=IF(FORCE_ARRAY(INPUT.read_access)[0]= \"SPECIFIC_TEAMS\", SPLIT(DOWNCASE(REPLACE(INPUT.shared_team_names, \" \", \"_\")), \",\"), [])",
+            "description": "<<INPUT.description>>",
+            "test_resource_enabled": "=INPUT.test_resource_enabled",
+            "is_test": "=INPUT.is_test_resource"
+          },
+          "final_payload": "=REJECT(\n  LOCAL.all_parameters,\n  LAMBDA(\n    item,\n    OR(\n      item = NULL,\n      IF(\n        OR(\n          TYPE(item) = \"TrueClass\",\n          TYPE(item) = \"FalseClass\",\n          TYPE(item) = \"Integer\"\n        ),\n        IS_EMPTY(TEXT(item)),\n        IS_EMPTY(item)\n      )\n    )\n  )\n)",
+          "add_value_field": "=MERGE(LOCAL.final_payload, OBJECT(\"value\", INPUT.json_resource_value))"
+        },
+        "payload": "=LOCAL.add_value_field"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "75cfb7a96df45614d8921490cb34c1fa3c51f0c3739b35438ba8f811623ca37e",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": [
+        {
+          "cron": "0 9 * * *",
+          "timezone": "America/Vancouver"
+        }
+      ]
+    },
+    {
+      "type": "Agents::RecordAgent",
+      "name": "Capture Record",
+      "disabled": false,
+      "description": null,
+      "guid": "cb62865676b984aae06c4089af7a3e95",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "create",
+        "record_result_mode": "",
+        "record_type_id": "",
+        "record_writers": ""
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null,
+      "record_writers": [
+        {
+          "formula": "<<META.story.name>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102646,
+            "name": "Story name",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<DATE(\"now\", \"%Y-%m-%d %H:%M:%S\")>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102647,
+            "name": "Timestamp",
+            "description": null,
+            "result_type": "TIMESTAMP",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.vulnerability_id>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102649,
+            "name": "CVE_ID",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.cve.original_description>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102650,
+            "name": "Description",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<check_for_ransomware.ransom[0].knownRansomwareCampaignUse>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102651,
+            "name": "Used_Ransomware_Campaign",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.hostname>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102652,
+            "name": "Hostname",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.tags>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102653,
+            "name": "Falcon_Tag",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.apps[0].product_name_normalized>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102654,
+            "name": "Vuln_App",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.internet_exposure>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102655,
+            "name": "Internet_Exposure",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.apps[0].vendor_normalized>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102656,
+            "name": "Vendor",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.platform>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102657,
+            "name": "Platform",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.os_version>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102658,
+            "name": "OS_Version",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.cve.base_score>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102659,
+            "name": "Base_Score",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.cve.exprt_rating>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102660,
+            "name": "Severity",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.product_type_desc>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102661,
+            "name": "Asset_Type",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.asset_criticality>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102662,
+            "name": "Asset_Criticality",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.host_kev.host_info.asset_roles>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102663,
+            "name": "Asset_Roles",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<DATE(explode.host_kev.cve.cisa_info.due_date, \"%Y-%m-%d\", \"America/Vancouver\")>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102664,
+            "name": "CISA_Due_Date",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        }
+      ],
+      "record_type": {
+        "id": 58597,
+        "name": "KEV_CS_Host (1)",
+        "editable": false,
+        "record_fields": [
+          {
+            "id": 102646,
+            "name": "Story name",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102647,
+            "name": "Timestamp",
+            "description": null,
+            "result_type": "TIMESTAMP",
+            "fixed_values": []
+          },
+          {
+            "id": 102648,
+            "name": "Updated at",
+            "description": null,
+            "result_type": "TIMESTAMP",
+            "fixed_values": []
+          },
+          {
+            "id": 102649,
+            "name": "CVE_ID",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102650,
+            "name": "Description",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102651,
+            "name": "Used_Ransomware_Campaign",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102652,
+            "name": "Hostname",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102653,
+            "name": "Falcon_Tag",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102654,
+            "name": "Vuln_App",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102655,
+            "name": "Internet_Exposure",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102656,
+            "name": "Vendor",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102657,
+            "name": "Platform",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102658,
+            "name": "OS_Version",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102659,
+            "name": "Base_Score",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102660,
+            "name": "Severity",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102661,
+            "name": "Asset_Type",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102662,
+            "name": "Asset_Criticality",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102663,
+            "name": "Asset_Roles",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102664,
+            "name": "CISA_Due_Date",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        ]
+      }
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Vulnerabilities-CVE ID",
+      "disabled": false,
+      "description": "Created from cURL command",
+      "guid": "500fc6d470bf36bf2a354d6685aa1c3d",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:2172894f0bbc74b752db47e51f3f7070",
+      "options": {
+        "url": "https://api.crowdstrike.com/spotlight/queries/vulnerabilities/v1",
+        "method": "get",
+        "payload": {
+          "filter": "status:!'closed'+cve.id:'<<UPCASE(explode.vuln.cveID)>>'",
+          "sort": "created_timestamp.asc"
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer <<CREDENTIAL.crowdstrike_prod_vuln_ro>>"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Explode",
+      "disabled": false,
+      "description": null,
+      "guid": "91c279b458f30c6b553b47dbb54bfa18",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:565a5910886172692426da5285cf26a8",
+      "options": {
+        "mode": "explode",
+        "path": "=list_catalog_of_known_exploited_vulnerabilities_in_cisa.body.vulnerabilities",
+        "to": "vuln",
+        "limit": "5000"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::RecordAgent",
+      "name": "Capture Record",
+      "disabled": false,
+      "description": null,
+      "guid": "b1dd8e2aabfa234411a20505e2909806",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:565a5910886172692426da5285cf26a8",
+      "options": {
+        "mode": "create",
+        "record_result_mode": "",
+        "record_type_id": "",
+        "record_writers": ""
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null,
+      "record_writers": [
+        {
+          "formula": "<<META.story.name>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102666,
+            "name": "Story name",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<DATE(\"now\", \"%Y-%m-%d %H:%M:%S\")>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102667,
+            "name": "Timestamp",
+            "description": null,
+            "result_type": "TIMESTAMP",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.vuln.cveID>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102669,
+            "name": "CVE_ID",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.vuln.vulnerabilityName>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102670,
+            "name": "Description",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<vulnerabilities_cve_id.body.meta.pagination.total>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102671,
+            "name": "Number_CS_Hosts_Affected",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.vuln.vendorProject>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102672,
+            "name": "Vendor",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.vuln.dueDate>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102673,
+            "name": "Due_Date",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        },
+        {
+          "formula": "<<explode.vuln.knownRansomwareCampaignUse>>",
+          "include_in_update": false,
+          "record_field": {
+            "id": 102674,
+            "name": "Used_Ransomware_Campaigns",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        }
+      ],
+      "record_type": {
+        "id": 58598,
+        "name": "CISA KEV in CrowdStrike - Overview",
+        "editable": false,
+        "record_fields": [
+          {
+            "id": 102666,
+            "name": "Story name",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102667,
+            "name": "Timestamp",
+            "description": null,
+            "result_type": "TIMESTAMP",
+            "fixed_values": []
+          },
+          {
+            "id": 102668,
+            "name": "Updated at",
+            "description": null,
+            "result_type": "TIMESTAMP",
+            "fixed_values": []
+          },
+          {
+            "id": 102669,
+            "name": "CVE_ID",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102670,
+            "name": "Description",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102671,
+            "name": "Number_CS_Hosts_Affected",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102672,
+            "name": "Vendor",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102673,
+            "name": "Due_Date",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          },
+          {
+            "id": 102674,
+            "name": "Used_Ransomware_Campaigns",
+            "description": null,
+            "result_type": "TEXT",
+            "fixed_values": []
+          }
+        ]
+      }
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Throttle",
+      "disabled": false,
+      "description": null,
+      "guid": "ecfed30f776826682b841dde518a4ceb",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:565a5910886172692426da5285cf26a8",
+      "options": {
+        "mode": "throttle",
+        "interval": "minute",
+        "capacity": 60,
+        "events_per_run": 1
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Any Vulnerable Hosts?",
+      "disabled": false,
+      "description": null,
+      "guid": "adac215f8b51ef5ff4bfc8afca59b781",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:565a5910886172692426da5285cf26a8",
+      "options": {
+        "rules": [
+          {
+            "path": "<<vulnerabilities_cve_id.body.meta.pagination.total>>",
+            "type": "field!=value",
+            "value": "0"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Append object",
+      "disabled": false,
+      "description": "Append a string or an array to a resource. If the resource has a test value this can be modified by using the is_test parameter.\n\nLink to API documentation: https://www.tines.com/api/resources/append-element",
+      "guid": "7a0ff0a2663a5a5eb75fa348e2a2ac3c",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "url": "https://<<INPUT.tenant_domain>>/api/v1/global_resources/<<INPUT.resource_id>>/append",
+        "method": "post",
+        "headers": {
+          "Authorization": "Bearer <<INPUT.tines_credential>>"
+        },
+        "content_type": "application_json",
+        "local": {
+          "all_parameters": {
+            "value": "=DEFAULT(INPUT.text_value, INPUT.array_value)",
+            "is_test": "=INPUT.is_test_resource"
+          },
+          "final_payload": "=REJECT(\n  LOCAL.all_parameters,\n  LAMBDA(\n    item,\n    OR(\n      item = NULL,\n      IF(\n        OR(\n          TYPE(item) = \"TrueClass\",\n          TYPE(item) = \"FalseClass\",\n          TYPE(item) = \"Integer\"\n        ),\n        IS_EMPTY(TEXT(item)),\n        IS_EMPTY(item)\n      )\n    )\n  )\n)"
+        },
+        "payload": "=LOCAL.final_payload",
+        "retry_on_status": [
+          "0",
+          "400-499",
+          "500"
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "b40e331f2e157852280d1116aff9f928555943a8fb098475fb5e987014e3e238",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Clear a JSON resource",
+      "disabled": false,
+      "description": "Clear a resource value in Tines.\n\nLink to API documentation: https://www.tines.com/api/resources/update",
+      "guid": "e887737fe16ed5016d4250b420052848",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "url": "https://<<INPUT.tenant_domain>>/api/v1/global_resources/<<INPUT.resource_id>>",
+        "method": "put",
+        "headers": {
+          "Authorization": "Bearer <<INPUT.tines_credential>>"
+        },
+        "content_type": "application_json",
+        "local": {
+          "all_parameters": {
+            "name": "=INPUT.resource_name",
+            "folder_id": "=INPUT.folder_id",
+            "read_access": "=DEFAULT(FORCE_ARRAY(INPUT.read_access)[0], \"TEAM\")",
+            "shared_team_slugs": "=IF(FORCE_ARRAY(INPUT.read_access)[0]= \"SPECIFIC_TEAMS\", SPLIT(DOWNCASE(REPLACE(INPUT.shared_team_names, \" \", \"_\")), \",\"), [])",
+            "description": "<<INPUT.description>>",
+            "test_resource_enabled": "=INPUT.test_resource_enabled",
+            "is_test": "=INPUT.is_test_resource"
+          },
+          "final_payload": "=REJECT(\n  LOCAL.all_parameters,\n  LAMBDA(\n    item,\n    OR(\n      item = NULL,\n      IF(\n        OR(\n          TYPE(item) = \"TrueClass\",\n          TYPE(item) = \"FalseClass\",\n          TYPE(item) = \"Integer\"\n        ),\n        IS_EMPTY(TEXT(item)),\n        IS_EMPTY(item)\n      )\n    )\n  )\n)",
+          "add_value_field": "=MERGE(LOCAL.final_payload, OBJECT(\"value\", INPUT.json_resource_value))"
+        },
+        "payload": "=LOCAL.add_value_field"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "75cfb7a96df45614d8921490cb34c1fa3c51f0c3739b35438ba8f811623ca37e",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Object",
+      "disabled": false,
+      "description": null,
+      "guid": "4e5fa70b178ed8732a4e96abef4d3184",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "vuln": "=OBJECT(\"cve_id\", explode.vuln.cveID, \"vuln_name\", explode.vuln.vulnerabilityName, \"num_of_cs_host\", vulnerabilities_cve_id.body.meta.pagination.total, \"ransomware_campaign\", explode.vuln.knownRansomwareCampaignUse, \"vendor\", explode.vuln.vendorProject, \"date_added_kev\", explode.vuln.dateAdded)"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "List Catalog of Known Exploited Vulnerabilities in CISA",
+      "disabled": false,
+      "description": "",
+      "guid": "33e975b4e4e2889ed24934605dfdb425",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:565a5910886172692426da5285cf26a8",
+      "options": {
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+        "content_type": "application_json",
+        "method": "get"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": "9d56ead01faefe2866b1f85560eab470e34fb6524f38d2243198e6d79ec3653f",
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Implode",
+      "disabled": false,
+      "description": null,
+      "guid": "b7b42f969d01b8f2aefa919a5d2f7179",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "implode",
+        "item_path": "=explode.vuln",
+        "guid_path": "=explode.guid",
+        "size_path": "=explode.size"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Send Email",
+      "disabled": false,
+      "description": null,
+      "guid": "308a620a7856f1fd4c7139d04f36e77d",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "recipients": [],
+        "reply_to": "",
+        "sender_name": "Tines CrowdStrike CISA KEV Host report - Overview",
+        "subject": "CISA KEV Catalog - CrowdStrike Host Report",
+        "body": "Summary:\n<br>\n<<ai_summary.output>>\n\n",
+        "advanced_html": true,
+        "attachments": [
+          {
+            "filename": "<<TODAY()>>_Highlevel_CISA_KEV_CrowdStrike_Report.csv",
+            "base64encodedcontents": "<<BASE64_ENCODE(OBJECTS_TO_CSV(RESOURCE.cisa_cs_kev_host_report))>>",
+            "content_type": "auto"
+          }
+        ],
+        "sender_address": "",
+        "cc": [],
+        "bcc": []
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "AI Summary",
+      "disabled": false,
+      "description": null,
+      "guid": "d32f5cd3081e0acaab6e1950c1a18199",
+      "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:0f8215bea3796894692145945d81ca03",
+      "options": {
+        "mode": "automatic",
+        "input": "=RESOURCE.cisa_cs_kev_host_report",
+        "guidance": "Summarize the top 10 Vulnerabilities by host count that have the known value in the ransomware_campaign key.\n\nOutput the summary as HTML.",
+        "language": "python_3_13",
+        "script": "def main(input):\n    data = input if isinstance(input, list) else []\n    \n    # Filter for \"Known\" ransomware_campaign\n    known = [v for v in data if v.get('ransomware_campaign', '').strip().lower() == 'known']\n    \n    # Sort by host count descending and take top 10\n    top10 = sorted(known, key=lambda x: x.get('num_of_cs_host', 0), reverse=True)[:10]\n    \n    rows = \"\"\n    for i, v in enumerate(top10, 1):\n        rows += f\"\"\"\n        <tr>\n            <td>{i}</td>\n            <td>{v.get('cve_id', '')}</td>\n            <td>{v.get('vuln_name', '')}</td>\n            <td>{v.get('vendor', '')}</td>\n            <td>{v.get('num_of_cs_host', 0):,}</td>\n            <td>{v.get('date_added_kev', '')}</td>\n        </tr>\"\"\"\n    \n    if not rows:\n        rows = '<tr><td colspan=\"6\" style=\"text-align:center;\">No vulnerabilities with Known ransomware campaign found.</td></tr>'\n    \n    html = f\"\"\"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Top 10 Vulnerabilities by Host Count (Known Ransomware Campaign)</title>\n    <style>\n        body <<_font_family>>\n        h2 <<color>>\n        table <<_border_collapse>>\n        th <<_background_color>>\n        td <<padding>>\n        tr:hover <<_background_color>>\n        tr:nth-child(even) <<_background_color>>\n        .badge <<_background_color>>\n    </style>\n</head>\n<body>\n    <h2>Top 10 Vulnerabilities by Host Count &mdash; <span class=\"badge\">Known Ransomware Campaign</span></h2>\n    <table>\n        <thead>\n            <tr>\n                <th>#</th>\n                <th>CVE ID</th>\n                <th>Vulnerability Name</th>\n                <th>Vendor</th>\n                <th>Host Count</th>\n                <th>Date Added (KEV)</th>\n            </tr>\n        </thead>\n        <tbody>\n            {rows}\n        </tbody>\n    </table>\n</body>\n</html>\"\"\"\n    \n    return html"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": true,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    }
+  ],
+  "diagram_notes": [
+    {
+      "content": "This workflow runs the weekly CS Host report for devices that have CVEs on the CISA KEV Catalog querying Tines Records.\n",
+      "position": [
+        420,
+        90
+      ],
+      "guid": "08e3dfc8ce11b0bd1c899e8c3e1f5266",
+      "width": 270
+    },
+    {
+      "content": "CISA KEV Catalog CrowdStrike host workflow\n",
+      "position": [
+        -90,
+        30
+      ],
+      "guid": "1744e41df30b779505aa7433104f6343",
+      "width": 180
+    },
+    {
+      "content": "* If Tines Records are not enabled in the tenant, use this workflow for quick snapshot report of CrowdStrike hosts that have a vulnerability on the CISA KEV Catalog.\n\n",
+      "position": [
+        -630,
+        15
+      ],
+      "guid": "1c1542dd56a2c6ebb4db503b7e6c10f9",
+      "width": 290
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "receiver": 3
+    },
+    {
+      "source": 1,
+      "receiver": 2
+    },
+    {
+      "source": 1,
+      "receiver": 5,
+      "link_type": "secondary"
+    },
+    {
+      "source": 2,
+      "receiver": 4
+    },
+    {
+      "source": 3,
+      "receiver": 1
+    },
+    {
+      "source": 4,
+      "receiver": 1
+    },
+    {
+      "source": 6,
+      "receiver": 13
+    },
+    {
+      "source": 7,
+      "receiver": 8
+    },
+    {
+      "source": 7,
+      "receiver": 10
+    },
+    {
+      "source": 8,
+      "receiver": 11
+    },
+    {
+      "source": 9,
+      "receiver": 8
+    },
+    {
+      "source": 9,
+      "receiver": 10
+    },
+    {
+      "source": 10,
+      "receiver": 12
+    },
+    {
+      "source": 11,
+      "receiver": 9
+    },
+    {
+      "source": 12,
+      "receiver": 15
+    },
+    {
+      "source": 13,
+      "receiver": 7
+    },
+    {
+      "source": 14,
+      "receiver": 6
+    },
+    {
+      "source": 16,
+      "receiver": 20
+    },
+    {
+      "source": 17,
+      "receiver": 19
+    },
+    {
+      "source": 19,
+      "receiver": 16
+    },
+    {
+      "source": 20,
+      "receiver": 18
+    },
+    {
+      "source": 20,
+      "receiver": 23
+    },
+    {
+      "source": 20,
+      "receiver": 25,
+      "link_type": "secondary"
+    },
+    {
+      "source": 21,
+      "receiver": 25
+    },
+    {
+      "source": 22,
+      "receiver": 24
+    },
+    {
+      "source": 23,
+      "receiver": 21
+    },
+    {
+      "source": 24,
+      "receiver": 17
+    },
+    {
+      "source": 25,
+      "receiver": 27
+    },
+    {
+      "source": 27,
+      "receiver": 26
+    }
+  ],
+  "diagram_layout": "{\"0bd78ecfb01c161734a903a0b9ea9651\":[-90,135],\"104b1a29d24a185461ac5c55f190c055\":[-30,600],\"2aa462ca6643e7cb9733e3992be12933\":[435,315],\"308a620a7856f1fd4c7139d04f36e77d\":[-600,870],\"33e975b4e4e2889ed24934605dfdb425\":[-600,225],\"4e5fa70b178ed8732a4e96abef4d3184\":[-600,630],\"500fc6d470bf36bf2a354d6685aa1c3d\":[-600,480],\"5d1bd2e8e1227fb4148300dae7b71d9b\":[-30,660],\"601a46ee3cb5613cf9735658f8ec265f\":[435,405],\"7a0ff0a2663a5a5eb75fa348e2a2ac3c\":[-600,690],\"82ac1a5c1b2ccd4a3cff80fb0da0911b\":[-90,930],\"8f1331456d700d3db33796e4b5ac3197\":[435,495],\"91c279b458f30c6b553b47dbb54bfa18\":[-600,330],\"9b8c052cd70c20e9fbecc8c2285fd529\":[-90,855],\"adac215f8b51ef5ff4bfc8afca59b781\":[-600,540],\"b1dd8e2aabfa234411a20505e2909806\":[-825,615],\"b7b42f969d01b8f2aefa919a5d2f7179\":[-600,750],\"c143544a087a8eee1d1630476f507668\":[435,585],\"c791e7749de3e227ed1113f17997a932\":[435,225],\"cb62865676b984aae06c4089af7a3e95\":[-90,1005],\"d32f5cd3081e0acaab6e1950c1a18199\":[-600,810],\"d652c9cd75b115dc6f048935a8b90c5f\":[-90,330],\"d7e60e7ed7e0d68e6a79b23dfa5a66a6\":[705,465],\"e887737fe16ed5016d4250b420052848\":[-600,165],\"ecfed30f776826682b841dde518a4ceb\":[-600,405],\"f23d7b3f79b8d63958e093ee949cf05d\":[-90,435],\"f27e2e788aaa7e64f38d49cdc1b68eb7\":[-30,735],\"fe4249155cfbea086eda618744110f1a\":[-90,210]}",
+  "story_library_metadata": {},
+  "monitor_failures": false,
+  "synchronous_webhooks_enabled": false,
+  "integrations": [
+    {
+      "action_inputs": [
+        {
+          "name": "Tenant domain",
+          "description": "The domain of the tenant.",
+          "required": true,
+          "type": "TEXT",
+          "ranking": 0,
+          "value": "\"<<META.tenant.domain>>\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Shared team names",
+          "description": "Comma separated list of teams' names where this resource can be used. Required to set 'read access' parameter to 'SPECIFIC_TEAMS'.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 1,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Tines credential",
+          "description": "",
+          "required": false,
+          "type": "CREDENTIAL",
+          "ranking": 2,
+          "value": "\"=CREDENTIAL.tines_resource_api_secret\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Folder ID",
+          "description": "ID of the folder where the resource will be located. You can identify the folder ID within the URL of your Tines tenant on the tenant overview page by selecting an item within the folder.",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 3,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Read access",
+          "description": "Control where this resource can be used. Defaults to 'team'. The 'specific teams' option is a premium feature that may not be available in your tenant and if used requires the additional parameter 'Shared team names'.",
+          "required": false,
+          "type": "OPTION",
+          "ranking": 4,
+          "value": "\"\"",
+          "options": [
+            "TEAM",
+            "GLOBAL",
+            "SPECIFIC_TEAMS"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Description",
+          "description": "Description of the resource.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 5,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Resource ID",
+          "description": "The ID of the resource you are querying for. You can identify this with the INFO key.",
+          "required": true,
+          "type": "NUMBER",
+          "ranking": 6,
+          "value": "\"=INFO.resource.cs_kev_report.id\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Resource name",
+          "description": "Name of the resource.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 7,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Test resource enabled?",
+          "description": "Select 'yes' if the resource is enabled for using a test resource.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 8,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Is test resource?",
+          "description": "Select 'yes' if the updated value should apply to the test resource rather than the live resource.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 9,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "JSON resource value",
+          "description": "The value of the resource. This can be an object with key/value pairs or an array of values. If you'd like to update a different part of the resource and keep the same value, just use a pill in formula mode referencing your resource.",
+          "required": true,
+          "type": "OBJECT",
+          "ranking": 10,
+          "value": "\"=[]\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        }
+      ],
+      "action_guid": "0bd78ecfb01c161734a903a0b9ea9651",
+      "product": "Tines",
+      "action_options_keys": []
+    },
+    {
+      "action_inputs": [
+        {
+          "name": "Tenant domain",
+          "description": "The domain of the tenant.",
+          "required": true,
+          "type": "TEXT",
+          "ranking": 0,
+          "value": "\"<<META.tenant.domain>>\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Tines credential",
+          "description": "",
+          "required": false,
+          "type": "CREDENTIAL",
+          "ranking": 1,
+          "value": "\"=CREDENTIAL.tines_resource_api_secret\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Resource ID",
+          "description": "The ID of the resource you are querying for. You can identify this with the INFO key.",
+          "required": true,
+          "type": "NUMBER",
+          "ranking": 2,
+          "value": "\"=INFO.resource.cisa_cs_kev_host_report.id\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Is test resource?",
+          "description": "Select 'yes' to append an element to the test resource.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 3,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Array value",
+          "description": "The array to append to the resource. Use this input instead of the 'Text value' input if you are appending an array.",
+          "required": false,
+          "type": "OBJECT",
+          "ranking": 4,
+          "value": "\"=object.vuln\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Text value",
+          "description": "The text to append to the resource. Use this input instead of the 'Array value' input if you are just appending text.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 5,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        }
+      ],
+      "action_guid": "7a0ff0a2663a5a5eb75fa348e2a2ac3c",
+      "product": "Tines",
+      "action_options_keys": [
+        "retry_on_status"
+      ]
+    },
+    {
+      "action_inputs": [
+        {
+          "name": "Tenant domain",
+          "description": "The domain of the tenant.",
+          "required": true,
+          "type": "TEXT",
+          "ranking": 0,
+          "value": "\"<<META.tenant.domain>>\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Range start",
+          "description": "The start time for the time range of record results. \n\nNote: using the calendar option will default the time to 00:00.",
+          "required": true,
+          "type": "DATE",
+          "ranking": 1,
+          "value": "\"=DATE(\\\"1 days ago\\\")\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Range end",
+          "description": "The end time for the time range of record results. \n\nNote: using the calendar option will default the time to 00:00.",
+          "required": true,
+          "type": "DATE",
+          "ranking": 2,
+          "value": "\"=DATE(\\\"Tomorrow\\\",\\\"%Y-%m-%d\\\")\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Record type ID",
+          "description": "The ID of the record result to retrieve. Identify the record ID using the INFO key. Optional if record field IDs are specified.",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 3,
+          "value": "\"=INFO.record.kev_cs_host.id\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Tines credential",
+          "description": "",
+          "required": false,
+          "type": "CREDENTIAL",
+          "ranking": 4,
+          "value": "\"=CREDENTIAL.tines_resource_api_secret\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Order field ID",
+          "description": "The ID of the field used to order the record results (order specified by 'sort direction order' parameter). Identify the field ID using the INFO key.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 5,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Sort direction order",
+          "description": "Sorts the list in ascending or descending order. Defaults to descending. Identify the ID to sort by in the 'order field ID' parameter.",
+          "required": false,
+          "type": "OPTION",
+          "ranking": 6,
+          "value": "\"\"",
+          "options": [
+            "Ascending",
+            "Descending"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Story IDs",
+          "description": "Comma separated list of story IDs to filter the results.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 7,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Record field IDs",
+          "description": "Comma separated list of record field IDs to filter the results. Identify the record field ID using the INFO key. Optional if record type ID is specified.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 8,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Test mode",
+          "description": "Select 'yes' to filter by records created in 'test' mode for stories with change control. Defaults to 'no'.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 9,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Page",
+          "description": "The page number of results to fetch. Relevant for queries with multiple pages of results",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 10,
+          "value": "\"=SPLIT(weekly_report_of_cs_hosts_on_kev_catalog.body.meta.next_page,\\\"page=\\\")[-1]\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Per page",
+          "description": "Set the number of record results returned per page. Defaults to 20, maximum is 500.",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 11,
+          "value": "500",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        }
+      ],
+      "action_guid": "8f1331456d700d3db33796e4b5ac3197",
+      "product": "Tines",
+      "action_options_keys": []
+    },
+    {
+      "action_inputs": [
+        {
+          "name": "Tenant domain",
+          "description": "The domain of the tenant.",
+          "required": true,
+          "type": "TEXT",
+          "ranking": 0,
+          "value": "\"<<META.tenant.domain>>\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Range start",
+          "description": "The start time for the time range of record results.",
+          "required": true,
+          "type": "DATE",
+          "ranking": 1,
+          "value": "\"=DATE(\\\"yesterday\\\")\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Range end",
+          "description": "The end time for the time range of record results.",
+          "required": true,
+          "type": "DATE",
+          "ranking": 2,
+          "value": "\"=DATE(\\\"tomorrow\\\")\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Record type ID",
+          "description": "The ID of the record result to retrieve. Identify the record ID using the INFO key. Optional if record field IDs are specified.",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 3,
+          "value": "\"=INFO.record.kev_cs_host.id\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Page",
+          "description": "The page number of results to fetch. Relevant for queries with multiple pages of results",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 4,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Tines credential",
+          "description": "",
+          "required": false,
+          "type": "CREDENTIAL",
+          "ranking": 5,
+          "value": "\"=CREDENTIAL.tines_resource_api_secret\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Order field ID",
+          "description": "The ID of the field used to order the record results (order specified by 'sort direction order' parameter). Identify the field ID using the INFO key.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 6,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Sort direction order",
+          "description": "Sorts the list in ascending or descending order. Defaults to descending. Identify the ID to sort by in the 'order field ID' parameter.",
+          "required": false,
+          "type": "OPTION",
+          "ranking": 7,
+          "value": "\"\"",
+          "options": [
+            "Ascending",
+            "Descending"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Story IDs",
+          "description": "Comma separated list of story IDs to filter the results.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 8,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Record field IDs",
+          "description": "Comma separated list of record field IDs to filter the results. Identify the record field ID using the INFO key. Optional if record type ID is specified.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 9,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Filters",
+          "description": "Add as many filters as desired as an object with the field_id, operator, and value specified.",
+          "required": true,
+          "type": "OBJECT",
+          "ranking": 10,
+          "value": "[{\"field_id\":\"<<INFO.record.kev_cs_host.fields.timestamp.id>>\",\"operator\":\"GREATER_THAN\",\"value\":\"<<DATE(\\\"1 days ago\\\")>>\"}]",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Test mode",
+          "description": "Select 'yes' to filter by records created in 'test' mode for stories with change control. Defaults to 'no'.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 11,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Per page",
+          "description": "Set the number of record results returned per page. Defaults to 20, maximum is 500.",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 12,
+          "value": "500",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        }
+      ],
+      "action_guid": "c791e7749de3e227ed1113f17997a932",
+      "product": "Tines",
+      "action_options_keys": []
+    },
+    {
+      "action_inputs": [
+        {
+          "name": "Tenant domain",
+          "description": "The domain of the tenant.",
+          "required": true,
+          "type": "TEXT",
+          "ranking": 0,
+          "value": "\"<<META.tenant.domain>>\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Tines credential",
+          "description": "",
+          "required": false,
+          "type": "CREDENTIAL",
+          "ranking": 1,
+          "value": "\"=CREDENTIAL.tines_resource_api_secret\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Resource ID",
+          "description": "The ID of the resource you are querying for. You can identify this with the INFO key.",
+          "required": true,
+          "type": "NUMBER",
+          "ranking": 2,
+          "value": "\"=INFO.resource.cisa_kev_catalog.id\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Is test resource?",
+          "description": "Select 'yes' to append an element to the test resource.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 3,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Array value",
+          "description": "The array to append to the resource. Use this input instead of the 'Text value' input if you are appending an array.",
+          "required": false,
+          "type": "OBJECT",
+          "ranking": 4,
+          "value": "\"=list_catalog_of_known_exploited_vulnerabilities_in_cisa.body.vulnerabilities\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Text value",
+          "description": "The text to append to the resource. Use this input instead of the 'Array value' input if you are just appending text.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 5,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        }
+      ],
+      "action_guid": "d652c9cd75b115dc6f048935a8b90c5f",
+      "product": "Tines",
+      "action_options_keys": [
+        "retry_on_status"
+      ]
+    },
+    {
+      "action_inputs": [
+        {
+          "name": "Tenant domain",
+          "description": "The domain of the tenant.",
+          "required": true,
+          "type": "TEXT",
+          "ranking": 0,
+          "value": "\"<<META.tenant.domain>>\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Shared team names",
+          "description": "Comma separated list of teams' names where this resource can be used. Required to set 'read access' parameter to 'SPECIFIC_TEAMS'.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 1,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Tines credential",
+          "description": "",
+          "required": false,
+          "type": "CREDENTIAL",
+          "ranking": 2,
+          "value": "\"=CREDENTIAL.tines_resource_api_secret\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Folder ID",
+          "description": "ID of the folder where the resource will be located. You can identify the folder ID within the URL of your Tines tenant on the tenant overview page by selecting an item within the folder.",
+          "required": false,
+          "type": "NUMBER",
+          "ranking": 3,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Read access",
+          "description": "Control where this resource can be used. Defaults to 'team'. The 'specific teams' option is a premium feature that may not be available in your tenant and if used requires the additional parameter 'Shared team names'.",
+          "required": false,
+          "type": "OPTION",
+          "ranking": 4,
+          "value": "\"\"",
+          "options": [
+            "TEAM",
+            "GLOBAL",
+            "SPECIFIC_TEAMS"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Description",
+          "description": "Description of the resource.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 5,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Resource ID",
+          "description": "The ID of the resource you are querying for. You can identify this with the INFO key.",
+          "required": true,
+          "type": "NUMBER",
+          "ranking": 6,
+          "value": "\"=INFO.resource.cisa_cs_kev_host_report.id\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Resource name",
+          "description": "Name of the resource.",
+          "required": false,
+          "type": "TEXT",
+          "ranking": 7,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Test resource enabled?",
+          "description": "Select 'yes' if the resource is enabled for using a test resource.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 8,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "Is test resource?",
+          "description": "Select 'yes' if the updated value should apply to the test resource rather than the live resource.",
+          "required": false,
+          "type": "BOOLEAN",
+          "ranking": 9,
+          "value": "\"\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": true,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        },
+        {
+          "name": "JSON resource value",
+          "description": "The value of the resource. This can be an object with key/value pairs or an array of values. If you'd like to update a different part of the resource and keep the same value, just use a pill in formula mode referencing your resource.",
+          "required": true,
+          "type": "OBJECT",
+          "ranking": 10,
+          "value": "\"=[]\"",
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "is_collapsed": false,
+          "sub_type": "HTML",
+          "multi_select_enabled": false,
+          "llm_json_schema": "{}"
+        }
+      ],
+      "action_guid": "e887737fe16ed5016d4250b420052848",
+      "product": "Tines",
+      "action_options_keys": []
+    }
+  ],
+  "sections": [],
+  "parent_only_send_to_story": false,
+  "send_to_story_timeout_enabled": false,
+  "send_to_story_timeout_duration_seconds": null,
+  "keep_events_for": 604800,
+  "reporting_status": true,
+  "send_to_story_enabled": false,
+  "entry_agent_guid": null,
+  "exit_agent_guids": [],
+  "api_entry_action_guids": [],
+  "api_exit_action_guids": [],
+  "send_to_story_access": null,
+  "send_to_story_access_source": 0,
+  "send_to_story_skill_use_requires_confirmation": true,
+  "pages": [],
+  "tags": [],
+  "time_saved_unit": "minutes",
+  "time_saved_value": 0,
+  "origin_story_identifier": "cloud:256caef50de818d681816208610a2c92:af3d3d35b221a49a47107c493fe9a4dc",
+  "recipients": [],
+  "integration_product": null,
+  "integration_vendor": null,
+  "llm_product_instructions": "",
+  "start_reference": null,
+  "send_to_stories": [],
+  "exported_at": "2026-05-13T05:20:57Z",
+  "icon": ":toolbox:"
+}
