@@ -37,6 +37,7 @@ Happy Building!
 
 Tom
 
+This post was drafted with AI assistance based on the author's story design and technical notes.
 
 ## Tines Documenation
 - [Tines AI Automatic Mode Event Transformation](https://www.tines.com/docs/actions/types/event-transformation/automatic//)
