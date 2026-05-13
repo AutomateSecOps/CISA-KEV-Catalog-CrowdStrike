@@ -27,7 +27,7 @@ The problem? Cross-referencing the CISA KEV against your CrowdStrike Spotlight d
 
 ## What This Story Does
 
-The **CISA-KEV-CrowdStrike-Hosts** story runs on a schedule and produces a weekly CSV report of every CrowdStrike-managed host in your environment that has an open vulnerability matching a CVE ID on the CISA KEV catalog. It enriches each finding with ransomware campaign association data, internet exposure status, asset criticality, CISA remediation due dates, and more — then writes each result to a Tines Record and emails the full report as a CSV attachment.
+The [**CISA-KEV-CrowdStrike-Hosts**](https://github.com/AutomateSecOps/CISA-KEV-Catalog-CrowdStrike/tree/main/tines) story runs on a schedule and produces a weekly CSV report of every CrowdStrike-managed host in your environment that has an open vulnerability matching a CVE ID on the CISA KEV catalog. It enriches each finding with ransomware campaign association data, internet exposure status, asset criticality, CISA remediation due dates, and more — then writes each result to a Tines Record and emails the full report as a CSV attachment.
 
 The output gives your team a clear, actionable list: these specific hosts, these specific CVEs, patch by this date.
 
