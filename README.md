@@ -4,7 +4,7 @@
 
 ---
 
-## The Problem with Prioritization
+## The Challenge with Prioritization
 
 Security teams drown in vulnerability data. 
 
@@ -47,4 +47,5 @@ This post was drafted with AI assistance based on the author's story design and 
 - [Tines Append Element to Resource](https://www.tines.com/api/resources/append-element/)
 - [Tines Resources](https://www.tines.com/docs/resources/)
 - [Tines Records](https://www.tines.com/docs/records/)
+- [Tines CISA Stories](https://www.tines.com/library/stories/?s=CISA) 
 - [Tines Community Edition](https://www.tines.com/pricing/)
