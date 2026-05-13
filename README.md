@@ -16,7 +16,7 @@ Start patching hosts, with a KEV CVE ID and that is exposed on the Internet, wil
 
 I hope you found this useful.  
 
-You can import this Tines story into your tenant by downloading the json file in the [tines](https://github.com/AutomateSecOps/EDgaR-Utility/tree/main/TinesStory) folder.
+You can import this Tines story into your tenant by downloading the json file in the [tines](https://github.com/AutomateSecOps/CISA-KEV-Catalog-CrowdStrike/tree/main/tines) folder.
 
 Once you start automating, you cannot stop!
 
