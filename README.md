@@ -1,9 +1,5 @@
 ## Patching What Matters: A Tines Story for CISA KEV Hosts in CrowdStrike
 
-*Posted on AutomateSecOps by Tom Power*
-
----
-
 ## The Challenge with Prioritization
 
 Security teams drown in vulnerability data. 
